@@ -18,6 +18,7 @@ services:
   - 3306:3306
   environment:
   - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+  - MYSQL_USER=root
   secrets:
   - db_root_password
   volumes:
