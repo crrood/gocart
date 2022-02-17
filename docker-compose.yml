@@ -9,25 +9,22 @@ services:
   volumes:
   - ./:/app
   stop_signal: SIGINT
-  depends_on: 
-  - mysqldb
-
- mysqldb:
-  image: mysql
-  ports:
-  - 3306:3306
   environment:
-  - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
-  secrets:
-  - db_root_password
+  - MONGODB_CONNSTRING=mongodb://AzureDiamond:hunter2@mongodb
+  depends_on: 
+  - mongodb
+
+ mongodb:
+  image: mongo:5.0
+  environment:
+   - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
+   - MONGO_INITDB_ROOT_PASSWORD=hunter2
   volumes:
-  - mysql:/var/lib/mysql
-  - mysql_config:/etc/mysql
+  - mongodb:/var/lib/mongodb
 
 secrets:
   db_root_password:
     file: db_root_password.txt
 
 volumes:
-  mysql:
-  mysql_config:
+  mongodb:

@@ -1,82 +1,66 @@
-import mysql.connector
-import json
+from pymongo import MongoClient
+import pymongo
+import json, os, uuid, logging
+from bson import json_util
 from flask import Flask
 
 app = Flask(__name__)
 
+DATABASE = "gocart"
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+log = logging.getLogger(__name__)
+
 @app.route('/')
 def hello_world():
-  return 'Hello, Docker!'
+  return 'Awaiting instructions...'
 
-@app.route('/widgets')
-def get_widgets() :
-  mydb = mysql.connector.connect(
-    host="mysqldb",
-    user="root",
-    password="password",
-    database="inventory"
-  )
-  cursor = mydb.cursor()
+@app.route('/payment-requests')
+def get_payment_requests() :
+  log.info("entry point")
+  payment_requests = get_collection("payment_requests")
 
-
-  cursor.execute("SELECT * FROM widgets")
-
-  row_headers=[x[0] for x in cursor.description] #this will extract row headers
-
-  results = cursor.fetchall()
-  json_data=[]
+  results = payment_requests.find()
+  result_string = ""
   for result in results:
-    json_data.append(dict(zip(row_headers,result)))
+    result_string.join(result)
+  
+  print("payment requests:")
+  print(results)
+  return result_string
 
-  cursor.close()
+@app.route('/create-payment-request')
+def create_payment_request():
+  payment_requests = get_collection("payment_requests")
 
-  return json.dumps(json_data)
+  # TODO dummy data
+  payment_request = {
+    "merchantPaymentRequestId": str(uuid.uuid4()),
+    "total": 50,
+    "subTotal": 50
+  }
 
-@app.route('/add-widget')
-def add_widget():
-  mydb = mysql.connector.connect(
-    host="mysqldb",
-    user="root",
-    password="password",
-    database="inventory"
-  )
-  cursor = mydb.cursor()
+  payment_requests.insert_one(payment_request)
 
-  cursor.execute("INSERT INTO widgets (name, description) "
-                "VALUES ('name', 'description');")
-  mydb.commit()
+  return json_util.dumps(payment_request)
 
-  cursor.close()
-  mydb.close()
+def get_client():
+  return MongoClient(os.environ["MONGODB_CONNSTRING"])
 
-  return "inserted"
+def get_database():
+  client = get_client()
+  return client[DATABASE]
 
-@app.route('/initdb')
-def db_init():
-  mydb = mysql.connector.connect(
-    host="mysqldb",
-    user="root",
-    password="password"
-  )
-  cursor = mydb.cursor()
+def get_collection(collection):
+  client = get_database()
+  return client[collection]
 
-  cursor.execute("DROP DATABASE IF EXISTS inventory")
-  cursor.execute("CREATE DATABASE inventory")
-  cursor.close()
+@app.route('/reset-db')
+def db_reset():
+  client = get_client()
+  client.drop_database(DATABASE)
 
-  mydb = mysql.connector.connect(
-    host="mysqldb",
-    user="root",
-    password="password",
-    database="inventory"
-  )
-  cursor = mydb.cursor()
-
-  cursor.execute("DROP TABLE IF EXISTS widgets")
-  cursor.execute("CREATE TABLE widgets (name VARCHAR(255), description VARCHAR(255))")
-  cursor.close()
-
-  return 'init database'
+  return "db reset"
 
 if __name__ == "__main__":
   app.run()
