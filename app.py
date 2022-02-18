@@ -1,5 +1,5 @@
-from pymongo import MongoClient
 import json, os, uuid, logging
+from pymongo import MongoClient
 from bson import json_util
 from flask import (Flask, render_template)
 
@@ -13,6 +13,10 @@ log = logging.getLogger(__name__)
 @app.route('/')
 def cart():
   return render_template("cart.html")
+  
+@app.route('/checkout')
+def checkout():
+  return render_template("checkout.html")
 
 @app.route('/payment-requests')
 def get_payment_requests() :
