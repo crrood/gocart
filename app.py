@@ -17,16 +17,13 @@ def hello_world():
 
 @app.route('/payment-requests')
 def get_payment_requests() :
-  log.info("entry point")
   payment_requests = get_collection("payment_requests")
 
   results = payment_requests.find()
   result_string = ""
   for result in results:
-    result_string.join(result)
-  
-  print("payment requests:")
-  print(results)
+    result_string = result_string.join(json_util.dumps(result))
+
   return result_string
 
 @app.route('/create-payment-request')
@@ -45,7 +42,8 @@ def create_payment_request():
   return json_util.dumps(payment_request)
 
 def get_client():
-  return MongoClient(os.environ["MONGODB_CONNSTRING"])
+  client = MongoClient(os.environ["MONGODB_CONNSTRING"])
+  return client
 
 def get_database():
   client = get_client()

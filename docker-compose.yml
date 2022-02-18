@@ -22,9 +22,5 @@ services:
   volumes:
   - mongodb:/var/lib/mongodb
 
-secrets:
-  db_root_password:
-    file: db_root_password.txt
-
 volumes:
   mongodb:
