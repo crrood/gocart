@@ -1,8 +1,7 @@
 from pymongo import MongoClient
-import pymongo
 import json, os, uuid, logging
 from bson import json_util
-from flask import Flask
+from flask import (Flask, render_template)
 
 app = Flask(__name__)
 
@@ -12,8 +11,8 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 log = logging.getLogger(__name__)
 
 @app.route('/')
-def hello_world():
-  return 'Awaiting instructions...'
+def cart():
+  return render_template("cart.html")
 
 @app.route('/payment-requests')
 def get_payment_requests() :
