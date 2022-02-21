@@ -1,4 +1,5 @@
-import json, os, uuid, logging
+import os, uuid, logging
+import requests
 from pymongo import MongoClient
 from bson import json_util
 from flask import (Flask, render_template)
@@ -18,8 +19,8 @@ def cart():
 def checkout():
   return render_template("checkout.html")
 
-@app.route('/payment-requests')
-def get_payment_requests() :
+@app.route('/payment-requests', methods = ["GET"])
+def get_payment_requests():
   payment_requests = get_collection("payment_requests")
 
   results = payment_requests.find()
@@ -28,6 +29,10 @@ def get_payment_requests() :
     result_string = result_string.join(json_util.dumps(result))
 
   return result_string
+
+@app.route('/payment-requests', methods = ["POST"])
+def create_payment_request():
+  return response
 
 @app.route('/create-payment-request')
 def create_payment_request():

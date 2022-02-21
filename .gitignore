@@ -2,3 +2,4 @@
 .envrc
 db_root_password.txt
 __pycache__
+config.ini
