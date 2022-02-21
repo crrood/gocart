@@ -6,6 +6,7 @@ services:
    context: .
   ports:
   - 5000:5000
+  - 443:443
   volumes:
   - ./:/app
   stop_signal: SIGINT
@@ -13,6 +14,8 @@ services:
   - MONGODB_CONNSTRING=mongodb://AzureDiamond:hunter2@mongodb
   depends_on: 
   - mongodb
+  networks:
+  - network
 
  mongodb:
   image: mongo:5.0
@@ -21,6 +24,12 @@ services:
    - MONGO_INITDB_ROOT_PASSWORD=hunter2
   volumes:
   - mongodb:/var/lib/mongodb
+  networks:
+  - network
 
 volumes:
   mongodb:
+
+networks:
+  network:
+    internal: false

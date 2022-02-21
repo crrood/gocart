@@ -1,5 +1,5 @@
 import os, uuid, logging
-import requests
+import utilities
 from pymongo import MongoClient
 from bson import json_util
 from flask import (Flask, render_template)
@@ -32,22 +32,13 @@ def get_payment_requests():
 
 @app.route('/payment-requests', methods = ["POST"])
 def create_payment_request():
-  return response
-
-@app.route('/create-payment-request')
-def create_payment_request():
-  payment_requests = get_collection("payment_requests")
-
-  # TODO dummy data
-  payment_request = {
+  request = {
     "merchantPaymentRequestId": str(uuid.uuid4()),
-    "total": 50,
-    "subTotal": 50
+    "subtotal": 50
   }
-
-  payment_requests.insert_one(payment_request)
-
-  return json_util.dumps(payment_request)
+  
+  response = utilities.api_request("payment-requests", "POST", request)
+  return response
 
 def get_client():
   client = MongoClient(os.environ["MONGODB_CONNSTRING"])
