@@ -1,5 +1,6 @@
 import time, uuid, base64, hashlib, logging, os, json
 import requests
+from flask import make_response
 from configparser import ConfigParser
 
 def generate_hmac_signature(url, method, timestamp, nonce, body):
@@ -39,23 +40,28 @@ def api_request(url, method, body):
   config = ConfigParser()
   config.read("config.ini")
   base_url = config["API"]["BaseUrl"]
+  merchant_id = config["API"]["MerchantId"]
 
   timestamp = str(int(time.time()))
   nonce = str(uuid.uuid4())
   hmac_signature = generate_hmac_signature(url, method, timestamp, nonce, body)
 
   headers = {
-    "X-Merchant-Id": config["API"]["MerchantId"],
+    "X-Merchant-Id": merchant_id,
     "Timestamp": timestamp,
     "Nonce": nonce,
     "Signature": hmac_signature
   }
 
   full_url = base_url + url
-  log.info(full_url)
-  log.info(body)
   r = requests.request(method, full_url, headers=headers, data=body)
-  log.info(r.status_code)
-  log.info(r.text)
+  
+  if "Content-Type" in r.headers and r.headers["Content-Type"] == "application/json":
+    response_data = r.json()
+  else:
+    response_data = r.text
 
-  return r.json()
+  flask_response = make_response(response_data, r.status_code)
+  flask_response.headers["API-Headers"] = r.headers
+
+  return flask_response

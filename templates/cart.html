@@ -93,10 +93,12 @@
   function PayByLink() {
     const request = new XMLHttpRequest();
     const url = "/payment-requests";
-    request.open("POST", url);
+    const method = "POST";
+    request.open(method, url);
 
     request.onreadystatechange = () => {
       if (request.readyState === XMLHttpRequest.DONE) {
+        console.log(request);
         console.log(request.responseText);
       }
     }
