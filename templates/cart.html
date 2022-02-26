@@ -89,13 +89,34 @@
 {% endblock %}
 
 {% block script %}
+<script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+
 <script>
   function PayByLink() {
     const request = new XMLHttpRequest();
     const url = "/payment-requests";
     const method = "POST";
-    request.open(method, url);
+    const requestBody = {
+      "lineItems": [
+        {
+          "name": 'some item 1',
+          "amount": 25,
+          "SKU": 'SKU1',
+          "category": 'some category'
+        },
+        {
+          "name": 'some item 2',
+          "amount": 25,
+          "SKU": 'SKU2',
+          "category": 'some category'
+        }],
+      "subtotal": 50,
+      "total": 50,
+      "orderId": uuidv4(),
+      "orderDescription": new Date()
+    };
 
+    request.open(method, url);
     request.onreadystatechange = () => {
       if (request.readyState === XMLHttpRequest.DONE) {
         console.log(request);
@@ -103,7 +124,7 @@
       }
     }
 
-    request.send();
+    request.send(JSON.stringify(requestBody));
   }
 </script>
 {% endblock %}

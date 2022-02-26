@@ -1,8 +1,8 @@
-import os, uuid, logging
+import os, logging
 import utilities
 from pymongo import MongoClient
 from bson import json_util
-from flask import (Flask, render_template)
+from flask import (Flask, render_template, request)
 
 app = Flask(__name__)
 
@@ -32,12 +32,8 @@ def get_payment_requests():
 
 @app.route('/payment-requests', methods = ["POST"])
 def create_payment_request():
-  request = {
-    "merchantPaymentRequestId": str(uuid.uuid4()),
-    "subtotal": 50
-  }
-  
-  response = utilities.api_request("payment-requests", "POST", request)
+  # send a request to the GoCart API
+  response = utilities.api_request("payment-requests", "POST", request.json)
   return response
 
 def get_client():
