@@ -2,3 +2,4 @@ Flask==2.0.3
 mysql-connector-python==8.0.27
 pymongo==4.0.1
 requests==2.27
+Flask-BasicAuth==0.2.0

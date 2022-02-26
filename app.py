@@ -3,8 +3,15 @@ import utilities
 from pymongo import MongoClient
 from bson import json_util
 from flask import (Flask, render_template, request)
+from flask_basicauth import BasicAuth
 
 app = Flask(__name__)
+
+app.config["BASIC_AUTH_USERNAME"] = "gocart"
+app.config["BASIC_AUTH_PASSWORD"] = "devex2022"
+app.config["BASIC_AUTH_FORCE"] = True
+
+basic_auth = BasicAuth(app)
 
 DATABASE = "gocart"
 
