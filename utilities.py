@@ -50,11 +50,12 @@ def api_request(url, method, body):
     "X-Merchant-Id": merchant_id,
     "Timestamp": timestamp,
     "Nonce": nonce,
-    "Signature": hmac_signature
+    "Signature": hmac_signature,
+    "Content-Type": "application/json"
   }
 
   full_url = base_url + url
-  r = requests.request(method, full_url, headers=headers, data=body)
+  r = requests.request(method, full_url, headers=headers, json=body)
   
   if "Content-Type" in r.headers and r.headers["Content-Type"] == "application/json":
     response_data = r.json()

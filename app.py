@@ -11,14 +11,18 @@ DATABASE = "gocart"
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 log = logging.getLogger(__name__)
 
+# static shopping cart
 @app.route('/')
 def cart():
   return render_template("cart.html")
-  
+
+# checkout page
 @app.route('/checkout')
 def checkout():
   return render_template("checkout.html")
 
+# get a list of already created payments
+# stored server-side
 @app.route('/payment-requests', methods = ["GET"])
 def get_payment_requests():
   payment_requests = get_collection("payment_requests")
@@ -30,12 +34,14 @@ def get_payment_requests():
 
   return result_string
 
+# create a new payment via the GoCart API
 @app.route('/payment-requests', methods = ["POST"])
 def create_payment_request():
-  # send a request to the GoCart API
   response = utilities.api_request("payment-requests", "POST", request.json)
+
   return response
 
+# connect to DB
 def get_client():
   client = MongoClient(os.environ["MONGODB_CONNSTRING"])
   return client
@@ -48,6 +54,7 @@ def get_collection(collection):
   client = get_database()
   return client[collection]
 
+# drop all data from DB
 @app.route('/reset-db')
 def db_reset():
   client = get_client()
