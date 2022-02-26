@@ -21,15 +21,11 @@ def generate_hmac_signature(url, method, timestamp, nonce, body):
   raw_string = raw_string.upper()
   raw_string = raw_string.replace(" ", "").replace("\n", "").replace("\t", "")
 
-  log.info(raw_string)
 
   b64_encoded_string = base64.b64encode(raw_string.encode())
-  log.info(b64_encoded_string)
   h = hashlib.new("sha256")
   h.update(b64_encoded_string)
   signature = h.hexdigest()
-
-  log.info(signature)
 
   return signature
 

@@ -89,7 +89,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
 
 <script>
   function PayByLink() {
@@ -112,15 +111,14 @@
         }],
       "subtotal": 50,
       "total": 50,
-      "merchantPaymentRequestId": uuidv4()
+      "merchantPaymentRequestId": new Date
     };
     
     request.open(method, url);
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = () => {
       if (request.readyState === XMLHttpRequest.DONE) {
-        console.log(request);
-        console.log(request.responseText);
+        window.location = JSON.parse(request.responseText).url;
       }
     }
 
