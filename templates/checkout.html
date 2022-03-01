@@ -4,7 +4,7 @@
 <div class="container">
   <main>
 
-    <div id="gocart-button"></div>
+    <div id="gocart-button-holder"></div>
 
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
@@ -191,6 +191,7 @@
       }],
     "subtotal": 50,
     "total": 50,
+    "currencyCode": "USD",
     "orderId": crypto.randomUUID(),
     "orderDescription": new Date()
   }
@@ -208,7 +209,7 @@
       console.log(errorMessage);
     },
     getOrderId: (orderId) => { console.log(orderId); }
-  }).render("gocart-button")
+  }).render("gocart-button-holder")
 </script>
 
 {% endblock %}
