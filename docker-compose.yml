@@ -1,33 +1,47 @@
 version: '3.8'
 
 services:
- web:
-  build:
-   context: .
-  ports:
-  - 5000:5000
-  volumes:
-  - ./:/app
-  stop_signal: SIGINT
-  environment:
-  - MONGODB_CONNSTRING=mongodb://AzureDiamond:hunter2@mongodb
-  depends_on: 
-  - mongodb
-  networks:
-  - network
+  web:
+    build:
+     context: .
+    ports:
+    - 5000:5000
+    volumes:
+    - ./:/app
+    stop_signal: SIGINT
+    environment:
+    - MONGODB_CONNSTRING=mongodb://AzureDiamond:hunter2@mongodb
+    depends_on: 
+    - mongodb
+    networks:
+    - network
 
- mongodb:
-  image: mongo:5.0
-  environment:
-   - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
-   - MONGO_INITDB_ROOT_PASSWORD=hunter2
-  volumes:
-  - mongodb:/var/lib/mongodb
-  networks:
-  - network
+  mongodb:
+    image: mongo:5.0
+    environment:
+     - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
+     - MONGO_INITDB_ROOT_PASSWORD=hunter2
+    volumes:
+    - mongodb:/var/lib/mongodb
+    networks:
+    - network
+
+  caddy:
+    image: caddy:2.4.6
+    ports:
+    - 80:80
+    - 443:443
+    volumes:
+    - $PWD/Caddyfile:/etc/caddy/Caddyfile
+    - caddy:/data
+    - caddy_config:/config
+    networks:
+    - network
 
 volumes:
   mongodb:
+  caddy:
+  caddy_config:
 
 networks:
   network:
