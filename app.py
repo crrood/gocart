@@ -86,6 +86,7 @@ def create_order():
 # webhooks
 @app.route('/webhooks', methods = ['POST'])
 def receive_webhook():
+  log.info(request.json)
   event_name = request.json['eventName']
   if event_name == 'ORDER_PAYMENT_SUCCEEDED':
     order_id = request.json['payload']['merchantOrderId']
