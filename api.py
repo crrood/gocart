@@ -29,7 +29,7 @@ def generate_hmac_signature(url, method, timestamp, nonce, body):
 
   return signature
 
-def api_request(url, method, body):
+def request(url, method, body):
   logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
   log = logging.getLogger(__name__)
 

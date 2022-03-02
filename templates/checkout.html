@@ -175,6 +175,7 @@
 <script src="https://api-staging.gocartpay.com/merchants/73eaaefe-2be8-4099-aee9-9c5eddcdd5fa/sdk"></script>
 
 <script>
+  // order data
   const order = {
     "lineItems": [
       {
@@ -195,13 +196,31 @@
     "orderId": crypto.randomUUID(),
     "orderDescription": new Date()
   }
+  console.log("order object:");
+  console.log(order);
 
+  // initialize SDK
   new GoCartSDK.Button({
     orderDetailsCallback: async (actions) => {
+        // send to DB
+      const request = new XMLHttpRequest();
+      const url = "/orders";
+      const method = "POST";
+
+      request.open(method, url);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.onreadystatechange = () => {
+        if (request.readyState === XMLHttpRequest.DONE) {
+          console.log("order added to DB successfully");
+        }
+      }
+      request.send(JSON.stringify(order));
+      
       actions.createOrder(order);
     },
     success: (orderId, customerInfo, shippingInfo, billingInfo, shippingMethod, taxes, transactionDetails) => {
       console.log(`Successfully processed order ${orderId}`);
+      console.log(customerInfo);
     },
     error: (orderId, errorCode, errorMessage) => {
       console.log(`Error processing order ${orderId}.`);
