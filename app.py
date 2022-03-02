@@ -72,7 +72,10 @@ def get_orders():
 @app.route('/orders', methods = ['POST'])
 def create_order():
   order_collection = db.get_collection('orders')
-  order_collection.insert_one(request.json)
+  json_data = request.json
+  json_data['status'] = 'created'
+
+  order_collection.insert_one(json_data)
 
   return make_response({}, 200)
 
@@ -81,13 +84,18 @@ def create_order():
 def receive_webhook():
   event_name = request.json['eventName']
   if event_name == 'ORDER_PAYMENT_SUCCEEDED':
+    order_id = request.json['payload']['merchantOrderId']
+    update = {'status': 'completed'}
+
+    # what a fucking hack - no way to tell if a webhook is for an order or payment request
     order_collection = db.get_collection('orders')
-    order_id = request.json['payload']['orderId']
-    order = order_collection.find({'orderId': order_id})
-  else:
-    payment_collection = db.get_collection('payment-requests')
-    payment_request_id = request.json['payload']['paymentRequestId']
-    payment = payment_collection.find({'paymentRequestId': request.json['payload']['paymentRequestId']})
+    query = {'orderId': order_id}
+    if len(order_collection.find(query)) > 0:
+      order_collection.update_one(query, update)
+    else:
+      payment_collection = db.get_collection('payment-requests')
+      query = {'merchantPaymentRequestId': order_id}
+      payment_collection.update_one(query, update)
 
   return make_response({}, 200)
 
