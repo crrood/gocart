@@ -37,7 +37,7 @@ def get_payment_requests():
   results = payment_requests.find()
   result_string = ""
   for result in results:
-    result_string = result_string.join(json_util.dumps(result))
+    result_string = result_string + json_util.dumps(result) + "\n"
 
   return result_string
 
@@ -46,7 +46,23 @@ def get_payment_requests():
 def create_payment_request():
   response = utilities.api_request("payment-requests", "POST", request.json)
 
+  # add to DB
+  if response.status_code == 200:
+    try:
+      json_data = json_util.loads(response.data)
+      payment_collection = get_collection("payment_requests")
+      payment_collection.insert_one(json_data)
+    except:
+      log.error("oh shit")
+      log.info(response.data)
+
   return response
+
+# webhooks
+# TODO
+@app.route('/webhooks', methods = ["POST"])
+def receive_webhook():
+  return
 
 # connect to DB
 def get_client():
