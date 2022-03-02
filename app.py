@@ -89,7 +89,7 @@ def receive_webhook():
   event_name = request.json['eventName']
   if event_name == 'ORDER_PAYMENT_SUCCEEDED':
     order_id = request.json['payload']['merchantOrderId']
-    update = {'status': 'completed'}
+    update = {'$set': {'status': 'completed'}}
 
     # what a fucking hack - no way to tell if a webhook is for an order or payment request
     order_collection = db.get_collection('orders')
