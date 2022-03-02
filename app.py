@@ -94,7 +94,7 @@ def receive_webhook():
     # what a fucking hack - no way to tell if a webhook is for an order or payment request
     order_collection = db.get_collection('orders')
     query = {'orderId': order_id}
-    if len(order_collection.find(query)) > 0:
+    if order_collection.count_documents(query) > 0:
       order_collection.update_one(query, update)
     else:
       payment_collection = db.get_collection('payment-requests')
