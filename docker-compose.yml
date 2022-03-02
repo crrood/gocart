@@ -39,6 +39,7 @@ services:
 volumes:
   mongodb:
   caddy:
+    external: true
   caddy_config:
 
 networks:

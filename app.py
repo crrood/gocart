@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config['BASIC_AUTH_USERNAME'] = 'gocart'
 app.config['BASIC_AUTH_PASSWORD'] = 'devex2022'
-app.config['BASIC_AUTH_FORCE'] = True
+# app.config['BASIC_AUTH_FORCE'] = True
 
 basic_auth = BasicAuth(app)
 
@@ -16,18 +16,21 @@ logging.basicConfig(level=os.environ.get('LOGLEVEL', 'INFO'))
 log = logging.getLogger(__name__)
 
 # static shopping cart
-@app.route('/')
+@app.route('/', methods = ['GET'])
+@basic_auth.required
 def cart():
   return render_template('cart.html')
 
 # checkout page
-@app.route('/checkout')
+@app.route('/checkout', methods = ['GET'])
+@basic_auth.required
 def checkout():
   return render_template('checkout.html')
 
 # get a list of already created payments
 # stored server-side
 @app.route('/payment-requests', methods = ['GET'])
+@basic_auth.required
 def get_payment_requests():
   payment_collection = db.get_collection('payment_requests')
 
@@ -58,6 +61,7 @@ def create_payment_request():
 
 # get a list of orders
 @app.route('/orders', methods = ['GET'])
+@basic_auth.required
 def get_orders():
   order_collection = db.get_collection('orders')
 
@@ -100,7 +104,8 @@ def receive_webhook():
   return make_response({}, 200)
 
 # drop all data from DB
-@app.route('/reset-db')
+@app.route('/reset-db', methods = ['GET'])
+@basic_auth.required
 def db_reset():
   return db.reset()
 
