@@ -4,8 +4,6 @@
 <div class="container">
   <main>
 
-    <div id="gocart-button-holder"></div>
-
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -42,16 +40,29 @@
       </div>
 
       <div class="col-md-7 col-lg-8">
+        
+        <h4 class="mb-3">Contact Info</h4>
+        <div class="col-12">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="emailInput" placeholder="you@example.com">
+          <div class="invalid-feedback">
+            Please enter a valid email address for shipping updates.
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input type="text" class="form-control" id="phoneNumber" placeholder="111-111-1111" required>
+          <div class="invalid-feedback">
+            Please enter your phone number for 2FA.
+          </div>
+        </div>
+
+        <hr class="my-4">
+
         <h4 class="mb-3">Billing address</h4>
         <form class="needs-validation" novalidate>
-          <div class="col-12">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="emailInput" placeholder="you@example.com">
-            <div class="invalid-feedback">
-              Please enter a valid email address for shipping updates.
-            </div>
-          </div>
-
+          
           <div class="row g-3">
             <div class="col-sm-6">
               <label for="firstName" class="form-label">First name</label>
@@ -80,6 +91,14 @@
             <div class="col-12">
               <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
               <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+            </div>
+
+            <div class="col-12">
+              <label for="address" class="form-label">City</label>
+              <input type="text" class="form-control" id="city" placeholder="San Francisco" required>
+              <div class="invalid-feedback">
+                Please enter your shipping city.
+              </div>
             </div>
 
             <div class="col-md-5">
@@ -115,13 +134,6 @@
 
           <hr class="my-4">
 
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="save-info">
-            <label class="form-check-label" for="save-info">Save this information for next time</label>
-          </div>
-
-          <hr class="my-4">
-
           <h4 class="mb-3">Card information</h4>
 
           <div class="row gy-3">
@@ -143,8 +155,16 @@
             </div>
 
             <div class="col-md-3">
-              <label for="cc-expiration" class="form-label">Expiration</label>
-              <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+              <label for="cc-expiration" class="form-label">Expiration Month</label>
+              <input type="text" class="form-control" id="cc-expiration-month" placeholder="" required>
+              <div class="invalid-feedback">
+                Expiration date required
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <label for="cc-expiration" class="form-label">Expiration Year</label>
+              <input type="text" class="form-control" id="cc-expiration-year" placeholder="" required>
               <div class="invalid-feedback">
                 Expiration date required
               </div>
@@ -160,8 +180,14 @@
           </div>
 
           <hr class="my-4">
+          
+          <!-- Enroll checkbox + text rendered by GoCart SDK -->
+          <div id="save-info"></div>
 
-          <button class="w-100 btn btn-primary btn-lg">Continue to checkout</button>
+          <hr class="my-4">
+
+          <div id="gocart-button-holder"></div>
+          <button class="w-100 btn btn-primary btn-lg" onclick="checkout()">Continue to checkout</button>
         </form>
       </div>
     </div>
@@ -230,11 +256,66 @@
     getOrderId: (orderId) => { console.log(orderId); }
   })
   
+  // render button
   gocart.render("gocart-button-holder");
 
-  document.getElementById("emailInput").addEventListener("change", e => {
+  // check email field for Expedited Guest Checkout
+  document.getElementById("emailInput").addEventListener("change", (e) => {
     gocart.guestRedirect(e.target.value);
-  })
+  });
+
+  // enrollment button
+  let shouldEnroll = true;
+  gocart.render({
+    enroll: {
+      id: "save-info",
+      defaultValue: true,
+      onChange: (isChecked) => {
+        shouldEnroll = isChecked
+      }
+    }
+  });
+
+  function checkout() {
+    console.log("checkout start");
+    const customerInfo =       {
+      "firstName": document.getElementById("firstName").value, // Optional
+      "lastName": document.getElementById("lastName").value, // Optional
+      "phoneNumber": document.getElementById("phoneNumber").value,
+      "emailAddress": document.getElementById("emailInput").value,
+      "paymentMethods": [ // Can be empty array
+        {
+          "nickName": "string", // Optional
+          "fullnameCard": document.getElementById("cc-name").value,
+          "cardNumber": document.getElementById("cc-number").value,
+          "expMonth": document.getElementById("cc-expiration-month").value,
+          "expYear": document.getElementById("cc-expiration-year").value
+        }
+      ],
+      "addresses": [ // Can be empty array
+        {
+          "firstName": document.getElementById("firstName").value,
+          "lastName": document.getElementById("lastName").value,
+          "company": "string", // Optional
+          "address1": document.getElementById("address").value,
+          "address2": document.getElementById("address2").value, // Optional
+          "city": document.getElementById("city").value,
+          "state": document.getElementById("state").value,
+          "country": document.getElementById("country").value,
+          "zip": document.getElementById("zip").value,
+          "phoneNumber": document.getElementById("phoneNumber").value // Optional
+        }
+      ]
+    };
+    console.log(customerInfo);
+
+    if (shouldEnroll) {
+      console.log("enrolling");
+      gocart.enrollCustomer(customerInfo);
+      console.log("enrolled");
+    }
+    console.log("checkout end");
+  }
 </script>
 
 {% endblock %}
