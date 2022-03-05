@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   web:
+    image: python:3.10.2-slim
     build:
      context: .
     volumes:
@@ -20,7 +21,7 @@ services:
      - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
      - MONGO_INITDB_ROOT_PASSWORD=hunter2
     volumes:
-    - mongodb:/var/lib/mongodb
+    - mongodb:/data/db
     networks:
     - network
 
@@ -38,6 +39,7 @@ services:
 
 volumes:
   mongodb:
+    external: true
   caddy:
     external: true
   caddy_config:
