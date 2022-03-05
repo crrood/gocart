@@ -44,7 +44,7 @@
         <h4 class="mb-3">Contact Info</h4>
         <div class="col-12">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="emailInput" placeholder="you@example.com">
+          <input type="email" class="form-control" id="emailInput" value="you@example.com">
           <div class="invalid-feedback">
             Please enter a valid email address for shipping updates.
           </div>
@@ -52,7 +52,7 @@
 
         <div class="col-12">
           <label for="phoneNumber" class="form-label">Phone Number</label>
-          <input type="text" class="form-control" id="phoneNumber" placeholder="111-111-1111" required>
+          <input type="text" class="form-control" id="phoneNumber" value="111-111-1111" required>
           <div class="invalid-feedback">
             Please enter your phone number for 2FA.
           </div>
@@ -66,7 +66,7 @@
           <div class="row g-3">
             <div class="col-sm-6">
               <label for="firstName" class="form-label">First name</label>
-              <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+              <input type="text" class="form-control" id="firstName" value="Colin" required>
               <div class="invalid-feedback">
                 Valid first name is required.
               </div>
@@ -74,7 +74,7 @@
 
             <div class="col-sm-6">
               <label for="lastName" class="form-label">Last name</label>
-              <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+              <input type="text" class="form-control" id="lastName" value="Rood" required>
               <div class="invalid-feedback">
                 Valid last name is required.
               </div>
@@ -82,7 +82,7 @@
 
             <div class="col-12">
               <label for="address" class="form-label">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+              <input type="text" class="form-control" id="address" value="1234 Main St" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
               </div>
@@ -90,12 +90,12 @@
 
             <div class="col-12">
               <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
-              <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+              <input type="text" class="form-control" id="address2" value="Apartment or suite">
             </div>
 
             <div class="col-12">
               <label for="address" class="form-label">City</label>
-              <input type="text" class="form-control" id="city" placeholder="San Francisco" required>
+              <input type="text" class="form-control" id="city" value="San Francisco" required>
               <div class="invalid-feedback">
                 Please enter your shipping city.
               </div>
@@ -103,7 +103,7 @@
 
             <div class="col-md-5">
               <label for="country" class="form-label">Country</label>
-              <select class="form-select" id="country" required>
+              <select class="form-select" id="country" value="United States" required>
                 <option value="">Choose...</option>
                 <option>United States</option>
               </select>
@@ -114,7 +114,7 @@
 
             <div class="col-md-4">
               <label for="state" class="form-label">State</label>
-              <select class="form-select" id="state" required>
+              <select class="form-select" id="state" value="California" required>
                 <option value="">Choose...</option>
                 <option>California</option>
               </select>
@@ -125,7 +125,7 @@
 
             <div class="col-md-3">
               <label for="zip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="zip" placeholder="" required>
+              <input type="text" class="form-control" id="zip" value="94117" required>
               <div class="invalid-feedback">
                 Zip code required.
               </div>
@@ -139,7 +139,7 @@
           <div class="row gy-3">
             <div class="col-md-6">
               <label for="cc-name" class="form-label">Name on card</label>
-              <input type="text" class="form-control" id="cc-name" placeholder="" required>
+              <input type="text" class="form-control" id="cc-name" value="Colin Rood" required>
               <small class="text-muted">Full name as displayed on card</small>
               <div class="invalid-feedback">
                 Name on card is required
@@ -148,7 +148,7 @@
 
             <div class="col-md-6">
               <label for="cc-number" class="form-label">Credit card number</label>
-              <input type="text" class="form-control" id="cc-number" placeholder="" required>
+              <input type="text" class="form-control" id="cc-number" value="4111111111111111" required>
               <div class="invalid-feedback">
                 Credit card number is required
               </div>
@@ -156,7 +156,7 @@
 
             <div class="col-md-3">
               <label for="cc-expiration" class="form-label">Expiration Month</label>
-              <input type="text" class="form-control" id="cc-expiration-month" placeholder="" required>
+              <input type="text" class="form-control" id="cc-expiration-month" value="01" required>
               <div class="invalid-feedback">
                 Expiration date required
               </div>
@@ -164,7 +164,7 @@
 
             <div class="col-md-3">
               <label for="cc-expiration" class="form-label">Expiration Year</label>
-              <input type="text" class="form-control" id="cc-expiration-year" placeholder="" required>
+              <input type="text" class="form-control" id="cc-expiration-year" value="30" required>
               <div class="invalid-feedback">
                 Expiration date required
               </div>
@@ -172,7 +172,7 @@
 
             <div class="col-md-3">
               <label for="cc-cvv" class="form-label">CVV</label>
-              <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
+              <input type="text" class="form-control" id="cc-cvv" value="111" required>
               <div class="invalid-feedback">
                 Security code required
               </div>
@@ -186,9 +186,11 @@
 
           <hr class="my-4">
 
-          <div id="gocart-button-holder"></div>
-          <button class="w-100 btn btn-primary btn-lg" onclick="checkout()">Continue to checkout</button>
         </form>
+
+        <div id="gocart-button-holder"></div>
+        <button class="w-100 btn btn-primary btn-lg" onclick="checkout()">Continue to checkout</button>
+
       </div>
     </div>
   </main>
@@ -288,8 +290,8 @@
           "nickName": "string", // Optional
           "fullnameCard": document.getElementById("cc-name").value,
           "cardNumber": document.getElementById("cc-number").value,
-          "expMonth": document.getElementById("cc-expiration-month").value,
-          "expYear": document.getElementById("cc-expiration-year").value
+          "expMonth": parseInt(document.getElementById("cc-expiration-month").value),
+          "expYear": parseInt(document.getElementById("cc-expiration-year").value)
         }
       ],
       "addresses": [ // Can be empty array
