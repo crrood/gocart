@@ -83,7 +83,7 @@ def create_order():
 
   return make_response({}, 200)
 
-# webhooks
+# status webhooks
 @app.route('/webhooks', methods = ['POST'])
 def receive_webhook():
   log.info(request.json)
@@ -103,6 +103,34 @@ def receive_webhook():
       payment_collection.update_one(query, update)
 
   return make_response({}, 200)
+
+# shipping webhooks
+@app.route('/shipping', methods = ['POST'])
+def return_shipping():
+  log.info(request.json)
+  shipping_address_id = request.json['shippingAddress']['shippingAddressId']
+
+  # hardcoded just for testing... I have no idea what shipping costs
+  response_body = {
+    'shippingAddressId': shipping_address_id,
+    'currencyCode': 'USD',
+    'shippingOptions': [
+        {
+            'id': 1,
+            'name': 'Ground Freight',
+            'price': 25.98
+        },
+        {
+            'id': 2,
+            'name': 'Next Day Air',
+            'price': 42.50
+        }
+    ],
+    'preferredShippingOptionId': 1,
+    'tax': 10.5
+  }
+
+  return make_response(response_body, 200)
 
 # drop all data from DB
 @app.route('/reset-db', methods = ['GET'])
