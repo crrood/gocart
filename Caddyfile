@@ -2,6 +2,6 @@ gocart.colinrood.net {
 	reverse_proxy web:5000
 }
 
-localhost {
+http://localhost:5000 {
 	reverse_proxy web:5000
 }
