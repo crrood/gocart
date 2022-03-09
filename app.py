@@ -28,7 +28,6 @@ def checkout():
   return render_template('checkout.html')
 
 # get a list of already created payments
-# stored server-side
 @app.route('/payment-requests', methods = ['GET'])
 @basic_auth.required
 def get_payment_requests():
@@ -92,7 +91,8 @@ def receive_webhook():
     order_id = request.json['payload']['merchantOrderId']
     update = {'$set': {'status': 'completed'}}
 
-    # what a fucking hack - no way to tell if a webhook is for an order or payment request
+    # no way to tell if a webhook is for an order or payment request
+    # so check each DB to see if the id already exists
     order_collection = db.get_collection('orders')
     query = {'orderId': order_id}
     if order_collection.count_documents(query) > 0:
@@ -110,7 +110,8 @@ def return_shipping():
   log.info(request.json)
   shipping_address_id = request.json['shippingAddress']['shippingAddressId']
 
-  # hardcoded just for testing... I have no idea what shipping costs
+  # hardcoded for testing
+  # your server should calculate shipping and tax here
   response_body = {
     'shippingAddressId': shipping_address_id,
     'currencyCode': 'USD',

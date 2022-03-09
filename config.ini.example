@@ -1,4 +1,4 @@
 [API]
-MerchantId = "73eaaefe-2be8-4099-aee9-9c5eddcdd5fa"
-ApiKey = "6f46af0255bb4befbc2f92ccf7b903a9"
-BaseUrl = "https://api-staging.gocartpay.com/"
+MerchantId = your-merchant-id-here
+ApiKey = your-api-key-here
+BaseUrl = https://api-staging.gocartpay.com/

@@ -16,6 +16,7 @@ def get_collection(collection):
   client = get_database()
   return client[collection]
 
+# drop the DB
 def reset():
   client = get_client()
   client.drop_database(DATABASE)
